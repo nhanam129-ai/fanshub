@@ -1,8 +1,4 @@
-// utils/get-data.ts
-
-// 1. Import trực tiếp file JSON
-// Lưu ý: Dấu .. nghĩa là thoát ra khỏi thư mục utils để về gốc, rồi vào thư mục data
-import slugsData from '../data/slugs.json';
+import slugsData from '../data/slugs.json'; // Import trực tiếp để Vercel đóng gói data
 
 export interface SlugData {
   slug: string;
@@ -11,22 +7,23 @@ export interface SlugData {
   destination: string;
 }
 
-export async function getSlugData(slug: string): Promise<SlugData | null> {
-  try {
-    // 2. Ép kiểu dữ liệu cho an toàn
-    const data = slugsData as SlugData[];
+// Hàm lấy toàn bộ data (Dùng để tạo trang tĩnh)
+export function getAllSlugs(): SlugData[] {
+  return slugsData as SlugData[];
+}
 
-    // 3. Tìm slug (so sánh không phân biệt hoa thường cho chắc ăn)
-    const found = data.find((item) => item.slug.toLowerCase() === slug.toLowerCase());
+// Hàm lấy 1 data theo slug
+export function getSlugData(slug: string): SlugData | null {
+  const data = slugsData as SlugData[];
+  
+  if (!slug) return null;
 
-    if (!found) {
-      console.error(`❌ Không tìm thấy slug: ${slug}`);
-      return null;
-    }
+  // Chuẩn hóa slug đầu vào: giải mã URL, về chữ thường
+  const normalizedInput = decodeURIComponent(slug).toLowerCase();
 
-    return found;
-  } catch (error) {
-    console.error("❌ Lỗi xử lý data:", error);
-    return null;
-  }
+  return data.find((item) => {
+    // Chuẩn hóa slug trong data để so sánh
+    const normalizedItemSlug = decodeURIComponent(item.slug).toLowerCase();
+    return normalizedItemSlug === normalizedInput;
+  }) || null;
 }
