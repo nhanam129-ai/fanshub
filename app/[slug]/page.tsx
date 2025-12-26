@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getSlugData } from '@/utils/get-data';
 import RedirectClient from '@/components/RedirectClient';
 import { notFound } from 'next/navigation';

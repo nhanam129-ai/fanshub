@@ -14,6 +14,12 @@ export async function getSlugData(slug: string): Promise<SlugData | null> {
   const filePath = path.join(process.cwd(), 'data/slugs.json');
   
   try {
+    console.log("Đang đọc file tại:", filePath); 
+    
+    if (!fs.existsSync(filePath)) {
+       console.error("❌ File không tồn tại!");
+       return null;
+    }
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const data: SlugData[] = JSON.parse(fileContent);
     
